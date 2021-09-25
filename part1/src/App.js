@@ -12,10 +12,18 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState([0, 0, 0, 0, 0, 0, 0])
 
+  const handleVote = (select) => {
+    let newlist = {...points}
+    newlist[selected] += 1
+    setPoints(newlist)
+  }
   return (
     <div>
       {anecdotes[selected]} <br />
+      <div>has {points[selected]} votes</div>
+      <button onClick={() => (handleVote(selected))}>Vote</button>
       <button onClick={() => {setSelected(Math.floor(Math.random()*6))}}>Next</button>
     </div>
   )
