@@ -15,16 +15,41 @@ const App = () => {
   const [points, setPoints] = useState([0, 0, 0, 0, 0, 0, 0])
 
   const handleVote = (select) => {
-    let newlist = {...points}
+    let newlist = [...points]
     newlist[selected] += 1
     setPoints(newlist)
   }
+
+  const getMaxVoteIdx = (points) => {
+    let max = 0
+    let maxIdx = 0
+    points.forEach((item, index) => {
+      if(item > max) {
+        max = item
+        maxIdx = index
+      }
+    })
+    return maxIdx
+  }
+
+  const MaxAnecdotes = ({points}) => {
+    return (
+      <div>
+        <h1>Anecdotes with most votes</h1>
+        <div>{anecdotes[getMaxVoteIdx(points)]}</div>
+      </div>
+    )
+  }
+  
   return (
     <div>
+      <h1>Anecdotes of the day</h1>
       {anecdotes[selected]} <br />
       <div>has {points[selected]} votes</div>
       <button onClick={() => (handleVote(selected))}>Vote</button>
       <button onClick={() => {setSelected(Math.floor(Math.random()*6))}}>Next</button>
+      <br />
+      <MaxAnecdotes points={points} />
     </div>
   )
 }
