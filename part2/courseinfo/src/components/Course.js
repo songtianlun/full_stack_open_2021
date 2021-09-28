@@ -1,7 +1,7 @@
 import React from "react";
 
 const Header = (props) => {
-    console.log(props)
+    // console.log(props)
     return (<h1>{props.course}</h1>)
   }
   const Content = (props) => {
@@ -19,9 +19,14 @@ const Header = (props) => {
     )
   }
   const Total = (props) => {
+    const total = props.parts.reduce((s, p) => {
+        // console.log('what is happening', s, p)
+        s.exercises += p.exercises
+        return s
+      })
     return (
         // eslint-disable-next-line
-      <p><b>Total of {eval((props.parts.map(part => part.exercises)).join("+"))} exercises</b></p>
+      <p><b>Total of {total.exercises} exercises</b></p>
     )
 }
 
