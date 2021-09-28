@@ -7,9 +7,7 @@ const Header = (props) => {
   const Content = (props) => {
     return (
       <div>
-        <Part part={props.parts[0].name} exercises={props.parts[0].exercises}/>
-        <Part part={props.parts[1].name} exercises={props.parts[1].exercises}/>
-        <Part part={props.parts[2].name} exercises={props.parts[2].exercises}/>
+        {props.parts.map(part => <Part key={part.name} part={part.name} exercises={part.exercises}/>)}
       </div>
     )
   }
@@ -22,7 +20,8 @@ const Header = (props) => {
   }
   const Total = (props) => {
     return (
-      <p>Number of exercises {props.exercises}</p>
+        // eslint-disable-next-line
+      <p><b>Total of {eval((props.parts.map(part => part.exercises)).join("+"))} exercises</b></p>
     )
 }
 
@@ -34,7 +33,7 @@ const Course = ({courses}) => {
                 parts={courses.parts}
             >
             </Content>
-            <Total exercises={courses.parts[0].exercises + courses.parts[1].exercises + courses.parts[2].exercises}/>
+            <Total parts={courses.parts} exercises={courses.parts[0].exercises + courses.parts[1].exercises + courses.parts[2].exercises}/>
         </div>
     )
 }
