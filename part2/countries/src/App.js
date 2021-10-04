@@ -29,12 +29,13 @@ const Countries = (props) => {
       <table>
         <thead>
           {/* <tr><th>Your PhoneBook</th></tr> */}
-          <tr><th>Name</th><th>Number</th></tr>
+          <tr><th>Name</th><th>show</th></tr>
         </thead>
         <tbody>
         {props.searchCountries.map((country, idx) => 
           (<tr key={idx}>
             <td>{country.name.common}</td>
+            <td><button onClick={() => {props.setSelectCountry(idx)}}>Show</button></td>
             {/* <td>{country.number}</td> */}
             </tr>)
         )}
@@ -48,6 +49,7 @@ const App = () => {
   const [countries, setCountries] = useState([])
   const [ searchCountries, setSearchCountries ] = useState(countries)
   const [ filter, setFilter ] = useState('')
+  const [ selectCountry, setSelectCountry ] = useState(-1)
   useEffect(() => {
     axios
       .get('https://restcountries.com/v3.1/all')
@@ -72,7 +74,10 @@ const App = () => {
               <Country country={searchCountries[0]}/> :
                 searchCountries.length >= 10 ? 
                   <div>Too many matches, specify another filter</div> :
-                  <Countries searchCountries={searchCountries} />
+                  <div>
+                    <Countries searchCountries={searchCountries} setSelectCountry={setSelectCountry} />
+                    {selectCountry>=0 ? <Country country={searchCountries[selectCountry]} /> : ""}
+                  </div>
       }
     </div>
   )
