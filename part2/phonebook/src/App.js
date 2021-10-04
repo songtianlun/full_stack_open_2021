@@ -6,13 +6,24 @@ const App = () => {
   ]) 
   const [ newName, setNewName ] = useState('')
   const addNote = (event) => {
+    let hasPerson = false
     event.preventDefault()
-    console.log(event)
+    // console.log(event)
     const newObj = {
       name: newName
     }
-    setPersons(persons.concat(newObj))
-    setNewName("")
+    persons.forEach((item) => {
+      if (item.name === newName) {
+        console.log("has person")
+        hasPerson = true
+      }
+    })
+    if (!hasPerson){
+      setPersons(persons.concat(newObj))
+      setNewName("")
+    } else {
+      window.alert(`${newName} is already added to phonebook`)
+    }
   }
 
   return (
@@ -28,8 +39,8 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map(person => 
-          (<h3>{person.name}</h3>)
+      {persons.map((person,index) => 
+          (<div key={index}>{person.name}</div>)
         )}
     </div>
   )
