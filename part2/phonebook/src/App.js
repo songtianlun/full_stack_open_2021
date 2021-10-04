@@ -1,5 +1,52 @@
 import React, { useEffect, useState } from 'react'
 
+const Filter = (props) => {
+  return (
+    <div>
+        filter show with <input onChange={(event) => (props.setFilter(event.target.value))} value={props.filter} />
+    </div>
+  )
+}
+
+const PersonForm = (props) => {
+  return (
+    <div>
+      <form onSubmit={props.addNote}>
+        <div>
+          name: <input onChange={(event)=>{props.setNewName(event.target.value)}} value={props.newName} />
+        </div>
+        <div>
+          number: <input onChange={(event) => (props.setNewNumber(event.target.value))} value={props.newNumber} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+const Persons = (props) => {
+  return (
+    <div>
+      <table>
+        <thead>
+          {/* <tr><th>Your PhoneBook</th></tr> */}
+          <tr><th>Name</th><th>Number</th></tr>
+        </thead>
+        <tbody>
+        {props.searchPersons.map((person) => 
+          (<tr key={person.id}>
+            <td>{person.name}</td>
+            <td>{person.number}</td>
+            </tr>)
+        )}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -13,7 +60,7 @@ const App = () => {
   const [ filter, setFilter ] = useState('')
   useEffect(() => {
     setSearchPersons(persons.filter((person) => person.name.toLowerCase().includes(filter.toLowerCase())))
-  }, [filter])
+  }, [filter, persons])
   const addNote = (event) => {
     let hasPerson = false
     event.preventDefault()
@@ -44,36 +91,11 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       {/* <div>debug: {newName}</div> */}
-      <div>
-        filter show with <input onChange={(event) => (setFilter(event.target.value))} value={filter} />
-      </div>
+      <Filter filter={filter} setFilter={setFilter} />
       <h2>Add New</h2>
-      <form onSubmit={addNote}>
-        <div>
-          name: <input onChange={(event)=>{setNewName(event.target.value)}} value={newName} />
-        </div>
-        <div>
-          number: <input onChange={(event) => (setNewNumber(event.target.value))} value={newNumber} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm setNewName={setNewName} newName={newName} setNewNumber={setNewNumber} newNumber={newNumber} addNote={addNote} />
       <h2>Numbers</h2>
-      <table>
-        <thead>
-          {/* <tr><th>Your PhoneBook</th></tr> */}
-          <tr><th>Name</th><th>Number</th></tr>
-        </thead>
-        <tbody>
-        {searchPersons.map((person) => 
-          (<tr key={person.id}>
-            <td>{person.name}</td>
-            <td>{person.number}</td>
-            </tr>)
-        )}
-        </tbody>
-      </table>
+      <Persons searchPersons={searchPersons} />
     </div>
   )
 }
