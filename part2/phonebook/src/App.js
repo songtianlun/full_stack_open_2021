@@ -40,6 +40,7 @@ const Persons = (props) => {
           (<tr key={person.id}>
             <td>{person.name}</td>
             <td>{person.number}</td>
+            <td><button onClick={() => (props.deletePersonHandle(person.id))}>delete</button></td>
             </tr>)
         )}
         </tbody>
@@ -93,6 +94,16 @@ const App = () => {
     }
   }
 
+  const deletePersonHandle = (id) => {
+    const phone = searchPersons.find(n=>n.id===id)
+    if (window.confirm(`Do you want to delete ${phone.name}`)){
+      phonebookServeice.deletePerson(id).then(() => {
+        console.log(` successful to delete ${phone.name}`)
+        setPersons(persons.filter(person=>person.id!=id))
+      })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -101,7 +112,7 @@ const App = () => {
       <h2>Add New</h2>
       <PersonForm setNewName={setNewName} newName={newName} setNewNumber={setNewNumber} newNumber={newNumber} addNote={addNote} />
       <h2>Numbers</h2>
-      <Persons searchPersons={searchPersons} />
+      <Persons searchPersons={searchPersons} deletePersonHandle={deletePersonHandle} />
     </div>
   )
 }
