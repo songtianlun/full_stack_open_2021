@@ -96,7 +96,7 @@ const App = () => {
     }, 5000)
   }
   
-  const showErrorNotifi = ({message}) => {
+  const showErrorNotifi = (message) => {
     setErrorMessage(message)
     setTimeout(() => {
       setErrorMessage(null)
@@ -153,6 +153,13 @@ const App = () => {
         console.log(` successful to delete ${phone.name}`)
         showSuccNotifi(` successful to delete ${phone.name}`)
         setPersons(persons.filter(person=>person.id!==id))
+      }).catch(() => {
+        showErrorNotifi(`Information of ${phone.name} has already been removed from server`)
+        phonebookServeice
+          .getAll()
+          .then((phonebookdata) => {
+            setPersons(phonebookdata)
+          })
       })
     }
   }
