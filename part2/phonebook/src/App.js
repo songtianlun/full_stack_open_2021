@@ -66,22 +66,21 @@ const App = () => {
     setSearchPersons(persons.filter((person) => person.name.toLowerCase().includes(filter.toLowerCase())))
   }, [filter, persons])
   const addNote = (event) => {
-    let hasPerson = false
+    let hasPerson = 0
     event.preventDefault()
     // console.log(event)
     persons.forEach((item) => {
       if (item.name === newName) {
-        console.log("has person")
-        hasPerson = true
+        console.log(`has person, id:${item.id}`)
+        hasPerson = item.id
       }
     })
     if (newName.length<1 || newNumber.length<1) {
       window.alert(`You must be to enter name and number`)
-    } else if (!hasPerson){
+    } else if (hasPerson===0){
       const newObj = {
         name: newName,
-        number: newNumber,
-        id: persons.length+1
+        number: newNumber
       }
       phonebookServeice.create(newObj).then(() => {
         setPersons(persons.concat(newObj))
@@ -90,7 +89,19 @@ const App = () => {
       })
       
     } else {
-      window.alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} (id:${hasPerson}) is already added to phonebook, replace the old number with a new one?`)){
+        const newObj = {
+          name: newName,
+          number: newNumber,
+          id: hasPerson
+        }
+        phonebookServeice.update(hasPerson, newObj).then((response) => {
+          setPersons(persons.map(p=>p.id!==hasPerson?p:response))
+        }).catch((err)=>{
+          console.log(`error to update: ${err}`)
+        })
+      }
+      
     }
   }
 
@@ -99,7 +110,7 @@ const App = () => {
     if (window.confirm(`Do you want to delete ${phone.name}`)){
       phonebookServeice.deletePerson(id).then(() => {
         console.log(` successful to delete ${phone.name}`)
-        setPersons(persons.filter(person=>person.id!=id))
+        setPersons(persons.filter(person=>person.id!==id))
       })
     }
   }

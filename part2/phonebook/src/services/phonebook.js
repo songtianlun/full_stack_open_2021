@@ -17,4 +17,12 @@ const deletePerson = (id) => {
     return request.then(response => (response.data))
 }
 
-export default { getAll, create, deletePerson }
+const update = (id, newObject) => {
+    const request = axios.put(`${baseUrl}/${id}`, newObject)
+    request.catch(err=>{
+        console.log(`err meg:${err}`)
+    })
+    return request.then(respinse => (respinse.data))
+}
+
+export default { getAll, create, deletePerson, update }
