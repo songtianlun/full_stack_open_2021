@@ -1,6 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import phonebookServeice from './services/phonebook'
 
+const ErrorNotification = ({message}) => {
+  if (message === null) {
+    return null
+  }
+  return (
+    <div className='error'>
+      {message}
+    </div>
+  )
+}
+
+const SuccessNotification = ({message}) => {
+  if (message === null) {
+    return null
+  }
+  return (
+    <div className='succe'>
+      {message}
+    </div>
+  )
+}
+
 const Filter = (props) => {
   return (
     <div>
@@ -55,6 +77,8 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ filter, setFilter ] = useState('')
+  const [ succeMessage, setSucceMessage ] = useState(null)
+  const [ errorMessage, setErrorMessage ] = useState(null)
   useEffect(() => {
     phonebookServeice
       .getAll()
@@ -65,6 +89,19 @@ const App = () => {
   useEffect(() => {
     setSearchPersons(persons.filter((person) => person.name.toLowerCase().includes(filter.toLowerCase())))
   }, [filter, persons])
+  const showSuccNotifi = (message) => {
+    setSucceMessage(message)
+    setTimeout(() => {
+      setSucceMessage(null)
+    }, 5000)
+  }
+  
+  const showErrorNotifi = ({message}) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
   const addNote = (event) => {
     let hasPerson = 0
     event.preventDefault()
@@ -83,6 +120,7 @@ const App = () => {
         number: newNumber
       }
       phonebookServeice.create(newObj).then(() => {
+        showSuccNotifi(`Added ${newName}`)
         setPersons(persons.concat(newObj))
         setNewName("")
         setNewNumber("")
@@ -96,7 +134,10 @@ const App = () => {
           id: hasPerson
         }
         phonebookServeice.update(hasPerson, newObj).then((response) => {
+          showSuccNotifi(`Update ${newName}`)
           setPersons(persons.map(p=>p.id!==hasPerson?p:response))
+          setNewName("")
+          setNewNumber("")
         }).catch((err)=>{
           console.log(`error to update: ${err}`)
         })
@@ -110,6 +151,7 @@ const App = () => {
     if (window.confirm(`Do you want to delete ${phone.name}`)){
       phonebookServeice.deletePerson(id).then(() => {
         console.log(` successful to delete ${phone.name}`)
+        showSuccNotifi(` successful to delete ${phone.name}`)
         setPersons(persons.filter(person=>person.id!==id))
       })
     }
@@ -117,7 +159,9 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <SuccessNotification message={succeMessage} />
+      <ErrorNotification message={errorMessage} />
       {/* <div>debug: {newName}</div> */}
       <Filter filter={filter} setFilter={setFilter} />
       <h2>Add New</h2>
