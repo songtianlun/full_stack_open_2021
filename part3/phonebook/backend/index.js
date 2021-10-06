@@ -68,13 +68,10 @@ app.post('/api/persons', (req, res) => {
 
 app.get('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
-    const note = persons.find( note => {
-        // console.log(note.id, typeof note.id, id, typeof id, note.id === id)
-        return note.id === id
-    })
-    console.log(id, note)
-    if (note) {
-        res.json(note)
+    const person = persons.find( person => (person.id === id))
+    console.log(id, person)
+    if (person) {
+        res.json(person)
     } else {
         res.status(404).end()
     }
