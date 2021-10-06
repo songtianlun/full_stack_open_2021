@@ -11,3 +11,6 @@ content-type: application/json
     "name": "sample",
     "number": "936-6662109"
 }
+
+### 
+GET http://localhost:3001/api/persons/unknok

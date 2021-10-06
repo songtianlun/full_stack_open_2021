@@ -1,6 +1,16 @@
 const express = require('express')
 const app = express()
-
+const requestLogger = (request, response, next) => {
+    console.log('Method:', request.method)
+    console.log('Path:  ', request.path)
+    console.log('Body:  ', request.body)
+    console.log('---')
+    next()
+}
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(requestLogger)
 app.use(express.json())
 
 let persons = [
@@ -95,6 +105,8 @@ app.delete('/api/persons/:id', (req, res) => {
     persons = persons.filter(note => note.id !== id)
     res.status(204).end()
 })
+
+app.use(unknownEndpoint)
 
 const PORT = 3001
 app.listen(PORT, () => {
