@@ -37,6 +37,11 @@ app.get('/', (req, res) => {
     res.send('<h1>Hello World!</h1>')
 })
 
+app.get('/info', (req, res) => {
+    let info = `PhoneBook has info for ${persons.length} people. </br> ${new Date()}`
+    res.send(info)
+})
+
 app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
