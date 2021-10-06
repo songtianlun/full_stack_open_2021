@@ -76,6 +76,20 @@ app.get('/api/notes/:id', (req, res) => {
     }
 })
 
+app.put('/api/notes/:id', (req, res) => {
+    const id = Number(req.params.id)
+    const body = req.body
+    let note = notes.find(note => note.id === id)
+
+    if (body.important !== undefined){
+        note.important = body.important
+    }
+
+    notes = notes.map(n=>n.id !== id ? n : note)
+    console.log(note)
+    res.json(note)
+})
+
 app.delete('/api/notes/:id', (req, res) => {
     const id = Number(req.params.id)
     notes = notes.filter(note => note.id !== id)

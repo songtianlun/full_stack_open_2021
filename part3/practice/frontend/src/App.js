@@ -46,7 +46,7 @@ const App = (props) => {
       //   `the note ${note.content} was already deleted from server`
       // )
       setErrorMessage(
-        `The note ${note.content} was already deleted from server`
+        `The note ${note.content} was error importance from server`
       )
       setTimeout(() => {
         setErrorMessage(null)
