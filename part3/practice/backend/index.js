@@ -1,10 +1,27 @@
 const express = require('express')
 const cors = require('cors')
+const mongoose = require('mongoose')
 
 const app = express()
+const url = `mongodb+srv://fullstack:fullstack@cluster0.v3rtg.mongodb.net/fullstack-note-app?retryWrites=true&w=majority`
+const noteSchema = new mongoose.Schema({
+    content: String,
+    date: Date,
+    important: Boolean,
+})
+const Note = mongoose.model('Note', noteSchema)
 
+mongoose.connect(url)
 app.use(express.json())
 app.use(cors())
+
+noteSchema.set('toJSON', {
+    transform: (document, returnedObject) => {
+      returnedObject.id = returnedObject._id.toString()
+      delete returnedObject._id
+      delete returnedObject.__v
+    }
+  })
 
 let notes = [
     {
@@ -39,7 +56,9 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/notes', (req, res) => {
-    res.json(notes)
+    Note.find({}).then((note) => {
+        res.json(note)
+    })
 })
 
 app.post('/api/notes', (req, res) => {
