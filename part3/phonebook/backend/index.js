@@ -27,8 +27,8 @@ let persons = [
 ]
 
 const generateId = () => {
-    const maxId = notes.length > 0
-      ? Math.max(...notes.map(n => n.id))
+    const maxId = persons.length > 0
+      ? Math.max(...persons.map(n => n.id))
       : 0
     return maxId + 1
 }
@@ -49,21 +49,20 @@ app.get('/api/persons', (req, res) => {
 app.post('/api/persons', (req, res) => {
     const body = req.body
     
-    if (!body.content) {
+    if (!body.name || !body.number) {
         return res.status(400).json({ 
           error: 'content missing' 
         })
     }
     
-    const note = {
-        content: body.content,
-        important: body.important || false,
-        date: new Date(),
+    const person = {
+        name: body.name,
+        number: body.number,
         id: generateId(),
     }
-    persons = persons.concat(note)
-    console.log(note)
-    res.json(note)
+    persons = persons.concat(person)
+    console.log(person)
+    res.json(person)
 })
 
 app.get('/api/persons/:id', (req, res) => {
