@@ -48,21 +48,35 @@ app.get('/api/persons', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
     const body = req.body
+    let hasPerson = -1
     
     if (!body.name || !body.number) {
         return res.status(400).json({ 
           error: 'content missing' 
         })
     }
-    
-    const person = {
-        name: body.name,
-        number: body.number,
-        id: generateId(),
+
+    persons.forEach((item) => {
+        if(item.name == body.name) {
+            hasPerson = item.id
+        }
+    })
+    if(hasPerson < 0) {
+        const person = {
+            name: body.name,
+            number: body.number,
+            id: generateId(),
+        }
+        persons = persons.concat(person)
+        console.log(person)
+        res.json(person)
+    } else {
+        console.log(`already has ${body.name} with id ${hasPerson}`)
+        res.status(400).json({
+            error: `name must be unique`
+        })
     }
-    persons = persons.concat(person)
-    console.log(person)
-    res.json(person)
+    
 })
 
 app.get('/api/persons/:id', (req, res) => {
