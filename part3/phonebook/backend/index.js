@@ -13,7 +13,11 @@ const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
 // app.use(requestLogger)
-app.use(morgan('tiny'))
+morgan.token('body', 
+    function (req, res) {
+        return JSON.stringify(req.body)
+    })
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(express.json())
 
 let persons = [
@@ -81,7 +85,7 @@ app.post('/api/persons', (req, res) => {
             id: generateId(),
         }
         persons = persons.concat(person)
-        console.log(person)
+        // console.log(person)
         res.json(person)
     } else {
         console.log(`already has ${body.name} with id ${hasPerson}`)
