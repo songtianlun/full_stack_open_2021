@@ -1,4 +1,6 @@
 const express = require('express')
+var morgan = require('morgan')
+
 const app = express()
 const requestLogger = (request, response, next) => {
     console.log('Method:', request.method)
@@ -10,7 +12,8 @@ const requestLogger = (request, response, next) => {
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
-app.use(requestLogger)
+// app.use(requestLogger)
+app.use(morgan('tiny'))
 app.use(express.json())
 
 let persons = [

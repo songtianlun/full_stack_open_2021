@@ -14,3 +14,6 @@ content-type: application/json
 
 ### 
 GET http://localhost:3001/api/persons/unknok
+
+### 
+GET http://localhost:3001/unknow
