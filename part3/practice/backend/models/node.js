@@ -3,8 +3,15 @@ const mongoose = require('mongoose')
 const url = `mongodb+srv://fullstack:fullstack@cluster0.v3rtg.mongodb.net/fullstack-note-app?retryWrites=true&w=majority`
 console.log('connecting to', url)
 const noteSchema = new mongoose.Schema({
-    content: String,
-    date: Date,
+    content: {
+      type: String,
+      minLength: 5,
+      required: true
+    },
+    date: { 
+      type: Date,
+      required: true
+    },
     important: Boolean,
 })
 const Note = mongoose.model('Note', noteSchema)
