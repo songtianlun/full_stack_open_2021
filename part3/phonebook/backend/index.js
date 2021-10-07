@@ -58,8 +58,10 @@ app.get('/', (req, res) => {
 })
 
 app.get('/info', (req, res) => {
-    let info = `PhoneBook has info for ${persons.length} people. </br> ${new Date()}`
-    res.send(info)
+    Person.find({}).then((person) => {
+        let info = `PhoneBook has info for ${person.length} people. </br> ${new Date()}`
+        res.send(info)
+    })
 })
 
 app.get('/api/persons', (req, res) => {
@@ -77,27 +79,37 @@ app.post('/api/persons', (req, res) => {
           error: 'content missing' 
         })
     }
+    Person.find({}).then((person) => {
+        person.forEach(item => {
+            if(item.name == body.name) {
+                hasPerson = item.id
+            }
+        })
 
-    persons.forEach((item) => {
-        if(item.name == body.name) {
-            hasPerson = item.id
+        if(hasPerson < 0) {
+            const person = new Person({
+                name: body.name,
+                number: body.number,
+            })
+            person.save().then(savePerson => {
+                res.json(person)
+            })
+            // persons = persons.concat(person)
+            // console.log(person)
+        } else {
+            console.log(`already has ${body.name} with id ${hasPerson}`)
+            res.status(400).json({
+                error: `name must be unique`
+            })
         }
     })
-    if(hasPerson < 0) {
-        const person = {
-            name: body.name,
-            number: body.number,
-            id: generateId(),
-        }
-        persons = persons.concat(person)
-        // console.log(person)
-        res.json(person)
-    } else {
-        console.log(`already has ${body.name} with id ${hasPerson}`)
-        res.status(400).json({
-            error: `name must be unique`
-        })
-    }
+
+    // persons.forEach((item) => {
+    //     if(item.name == body.name) {
+    //         hasPerson = item.id
+    //     }
+    // })
+    
     
 })
 
