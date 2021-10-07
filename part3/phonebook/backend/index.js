@@ -72,7 +72,7 @@ app.get('/api/persons', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
     const body = req.body
-    let hasPerson = -1
+    let hasPersonID = undefined
     
     if (!body.name || !body.number) {
         return res.status(400).json({ 
@@ -82,11 +82,11 @@ app.post('/api/persons', (req, res) => {
     Person.find({}).then((person) => {
         person.forEach(item => {
             if(item.name == body.name) {
-                hasPerson = item.id
+                hasPersonID = item.id
             }
         })
 
-        if(hasPerson < 0) {
+        if(!hasPersonID) {
             const person = new Person({
                 name: body.name,
                 number: body.number,
@@ -97,7 +97,7 @@ app.post('/api/persons', (req, res) => {
             // persons = persons.concat(person)
             // console.log(person)
         } else {
-            console.log(`already has ${body.name} with id ${hasPerson}`)
+            // console.log(`already has ${body.name} with id ${hasPerson}`)
             res.status(400).json({
                 error: `name must be unique`
             })
@@ -111,6 +111,19 @@ app.post('/api/persons', (req, res) => {
     // })
     
     
+})
+
+app.put('/api/persons/:id', (req, res, next) => {
+    const body = req.body
+    const newPerson = {
+        name: body.name,
+        number: body.number,
+    }
+    Person.findByIdAndUpdate(req.params.id, newPerson, {new: true})
+        .then(updatePerson => {
+            res.json(updatePerson)
+        })
+        .catch(err => next(err))
 })
 
 app.get('/api/persons/:id', (req, res, next) => {
