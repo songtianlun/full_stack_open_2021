@@ -77,23 +77,37 @@ app.get('/api/notes/:id', (req, res, next) => {
 })
 
 app.put('/api/notes/:id', (req, res) => {
-    const id = Number(req.params.id)
+    // const id = Number(req.params.id)
     const body = req.body
-    let note = notes.find(note => note.id === id)
-
-    if (body.important !== undefined){
-        note.important = body.important
+    const note = {
+        content: body.content,
+        important: body.important
     }
+    Note.findByIdAndUpdate(req.params.id, note, {new: true})
+        .then(updateNote => {
+            res.json(updateNote)
+        })
+        .catch(err => next(err))
+    // let note = notes.find(note => note.id === id)
 
-    notes = notes.map(n=>n.id !== id ? n : note)
-    console.log(note)
-    res.json(note)
+    // if (body.important !== undefined){
+    //     note.important = body.important
+    // }
+
+    // notes = notes.map(n=>n.id !== id ? n : note)
+    // console.log(note)
+    // res.json(note)
 })
 
 app.delete('/api/notes/:id', (req, res) => {
-    const id = Number(req.params.id)
-    notes = notes.filter(note => note.id !== id)
-    res.status(204).end()
+    // const id = Number(req.params.id)
+    // notes = notes.filter(note => note.id !== id)
+    Note.findByIdAndRemove(req.params.id)
+        .then(result => {
+            res.status(204).end()        
+        })
+        .cache(err => next(err))
+    
 })
 
 const errorHandler = (error, request, response, next) => {
