@@ -99,7 +99,7 @@ app.put('/api/notes/:id', (req, res) => {
     // res.json(note)
 })
 
-app.delete('/api/notes/:id', (req, res) => {
+app.delete('/api/notes/:id', (req, res, next) => {
     // const id = Number(req.params.id)
     // notes = notes.filter(note => note.id !== id)
     Note.findByIdAndRemove(req.params.id)
